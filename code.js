@@ -2,11 +2,12 @@ var c = document.getElementById("myCanvas");
 var ctx = c.getContext('2d');
 
 var amount = 300;
-amount += 2;
 size = c.width/(amount-2);
 
 var display;
 var mainloop;
+var playButton;
+var stopButton;
 
 arr = [];
 copyarr = [];
@@ -17,12 +18,12 @@ for(var i = 0; i < amount; i++){
 
 function Display(){
     ctx.clearRect(0,0,c.width,c.height);
-    for(var i = 1; i < amount - 1; i++){
-        for(var j = 1; j < amount - 1; j++){
+    for(var i = 0; i < amount; i++){
+        for(var j = 0; j < amount; j++){
             ctx.beginPath();
             ctx.fillStyle = "rgb(" + arr[i][j][0] + "," + arr[i][j][1] + "," + arr[i][j][2] + ")";
             //ctx.strokeStyle = 'black';
-            ctx.fillRect(i*size - size, j*size - size, size, size);
+            ctx.fillRect(i*size, j*size, size, size);
             //ctx.rect(i*size - size, j*size - size, size, size);
             ctx.fill();
             ctx.stroke();
@@ -32,47 +33,48 @@ function Display(){
 }
 
 function Avg(i, j, index){
-    // if(i == 0 && j == 0){
-    //     //return 0;
-    //     return (arr[1][0][index] + arr[1][1][index] + arr[0][1][index]) / 3;
-    // }
-    // if(i == arr.size - 1 && j == 0){
-    //     //return 0;
-    //     return (arr[arr.size - 2][0][index] + arr[arr.size - 2][1][index] + arr[arr.size - 1][1][index]) / 3;
-    // }
-    // if(i == 0 && j == arr.size - 1){
-    //     //return 0;
-    //     return (arr[0][arr.size - 2][index] + arr[1][arr.size - 2][index] + arr[1][arr.size - 1][index]) / 3;
-    // }
-    // if(i == arr.size - 1 && j == arr.size - 1){
-    //     //return 0;
-    //     return (arr[arr.size - 1][arr.size - 2][index] + arr[arr.size - 2][arr.size - 1][index] + arr[arr.size - 2][arr.size - 2][index]) / 3;
-    // }
-    // if(i == 0){
-    //     //return 0;
-    //     return (arr[i+1][j][index] + arr[i][j+1][index] + arr[i][j-1][index] + arr[i+1][j+1][index] + arr[i+1][j-1][index]) / 5;
-    // }
-    // if(i == arr.size - 1){
-    //     //return 0;
-    //     return (arr[i-1][j][index] + arr[i][j+1][index] + arr[i][j-1][index] + arr[i-1][j+1][index] + arr[i-1][j-1][index]) / 5;
-    // }
-    // if(j == 0){
-    //     //return 0;
-    //     return (arr[i+1][j][index] + arr[i-1][j][index] + arr[i-1][j+1][index] + arr[i+1][j+1][index] + arr[i][j+1][index]) / 5;
-    // }
-    // if(j == arr.size - 1){
-    //     //return 0;
-    //     return (arr[i+1][j][index] + arr[i-1][j][index] + arr[i-1][j-1][index] + arr[i+1][j-1][index] + arr[i][j-1][index]) / 5;
-    // }
-    //if(i > 0 && j > 0 && i < arr.size - 1 && j < arr.size - 1)
+    if(i == 0 && j == 0){
+        //return 0;
+        return (arr[1][0][index] + arr[1][1][index] + arr[0][1][index]) / 3;
+    }
+    if(i == amount - 1 && j == 0){
+        //return 0;
+        return (arr[amount - 2][0][index] + arr[amount - 2][1][index] + arr[amount - 1][1][index]) / 3;
+    }
+    if(i == 0 && j == amount - 1){
+        //return 0;
+        return (arr[0][amount - 2][index] + arr[1][amount - 2][index] + arr[1][amount - 1][index]) / 3;
+    }
+    if(i == amount - 1 && j == amount - 1){
+        //return 0;
+        return (arr[amount - 1][amount - 2][index] + arr[amount - 2][amount - 1][index] + arr[amount - 2][amount - 2][index]) / 3;
+    }
+
+    if(i == 0){
+        //return 0;
+        return (arr[i+1][j][index] + arr[i][j+1][index] + arr[i][j-1][index] + arr[i+1][j+1][index] + arr[i+1][j-1][index]) / 5;
+    }
+    if(i == amount - 1){
+        //return 0;
+        return (arr[i-1][j][index] + arr[i][j+1][index] + arr[i][j-1][index] + arr[i-1][j+1][index] + arr[i-1][j-1][index]) / 5;
+    }
+    if(j == 0){
+        //return 0;
+        return (arr[i+1][j][index] + arr[i-1][j][index] + arr[i-1][j+1][index] + arr[i+1][j+1][index] + arr[i][j+1][index]) / 5;
+    }
+    if(j == amount - 1){
+        //return 0;
+        return (arr[i+1][j][index] + arr[i-1][j][index] + arr[i-1][j-1][index] + arr[i+1][j-1][index] + arr[i][j-1][index]) / 5;
+    }
+    
+    if(i > 0 && j > 0 && i < amount - 1 && j < amount - 1)
         return (arr[i+1][j][index] + arr[i][j+1][index] + arr[i-1][j][index] + arr[i][j-1][index] + arr[i+1][j+1][index] + arr[i-1][j-1][index] + arr[i+1][j-1][index] + arr[i-1][j+1][index]) / 8;
-    //return 0;
 }
 
 function MakeNewarr(){
 
-    for(let i = 1; i < amount - 1; i++){
-        for(let j = 1; j < amount - 1; j++){
+    for(let i = 0; i < amount; i++){
+        for(let j = 0; j < amount; j++){
             copyarr[i][j][0] = Avg(i,j,0);
             copyarr[i][j][1] = Avg(i,j,1);
             copyarr[i][j][2] = Avg(i,j,2);
@@ -109,11 +111,16 @@ function ChangeCellOnClick(event){
     i = Math.ceil(event.clientX/(size));
     j = Math.ceil(event.clientY/(size));
 
-    for(var x = -1; x <= 1; x++){
-        for(var y = -1; y <= 1; y++){
-            arr[i+x][j+y][0] = parseFloat(document.getElementById("R").value);
-            arr[i+x][j+y][1] = parseFloat(document.getElementById("G").value);
-            arr[i+x][j+y][2] = parseFloat(document.getElementById("B").value);
+    brushSize = parseInt(document.getElementById("brushSize").value - 3);
+
+    for(var x = -2 - Math.floor(brushSize/2); x <= 0 + Math.floor(brushSize/2); x++){
+        for(var y = -2 - Math.floor(brushSize/2); y <= 0 + Math.floor(brushSize/2); y++){
+            if(i+x >= 0 && i+x < amount && j+y >= 0 && j+y < amount){
+                const color = document.getElementById("colorInput").value;
+                arr[i+x][j+y][0] = parseInt(color.substr(1,2), 16);
+                arr[i+x][j+y][1] = parseInt(color.substr(3,2), 16);
+                arr[i+x][j+y][2] = parseInt(color.substr(5,2), 16);
+            }
         }
     }
     
@@ -146,16 +153,20 @@ function SetMouseUp(){
 
 
 function StartSim(){
+    playButton.style.backgroundColor = "#00FF00";
+    stopButton.style.backgroundColor = "beige";
     mainloop = setInterval(MainLoop,50);
 }
 
 function StopSim(){
+    playButton.style.backgroundColor = "beige";
+    stopButton.style.backgroundColor = "#00FF00";
     clearInterval(mainloop);
 }
 
 function SetSize(){
-    amount = parseFloat(document.getElementById("len").value) + 2;
-    size = c.width/(amount-2);
+    amount = parseFloat(document.getElementById("len").value);
+    size = c.width/(amount);
     Display();
 }
 
@@ -166,7 +177,10 @@ function SetSize(){
 // //Display();
 // //MakeNewarr();
 window.onload = function() {
-    document.getElementById("len").value = "100";
+    document.getElementById("len").value = 100;
+    document.getElementById("brushSize").value = 3;
+    playButton = document.getElementById("play");
+    stopButton = document.getElementById("stop");
     SetSize();
 };
 
