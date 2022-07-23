@@ -17,17 +17,18 @@
         <button onclick="MainLoop()">Next frame</button>
         <button onclick="FillArray(true)">Randomize</button>
         <button onclick="FillArray()">Start from blank</button>
-        <button onclick="StartSim()">Play</button>
-        <button onclick="StopSim()">Stop</button>
+        <button id="play" onclick="StartSim()">Play</button>
+        <button id="stop" onclick="StopSim()">Stop</button>
     </div>
     <div id="sliders">
-        <input type="range" id="R" min="0" max="255" value = 255></input>
-        <input type="range" id="G" min="0" max="255" value = 0></input>
-        <input type="range" id="B" min="0" max="255" value = 0></input>
+        <input type="color" value="#FF0000" id="colorInput"></input>
+        <label for="colorInput"> Brush color </label><br>
+        <label for="brushSize"> Brush size: </label>
+        <input id="brushSize" size="1"></input><br>
     </div>
     <div id="inputs">
-        <label for="len"> Size: </label>
-        <input id="len" size="1"></input><br>
+        <label for="len"> Grid size: </label>
+        <input id="len" size="1"></input><br>  
         <button style="padding:10px 10px; position: relative; top: 10px; left: 20px;" onclick="SetSize()"> Go! </button>
     </div>
 </body>
