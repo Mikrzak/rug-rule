@@ -1,0 +1,22 @@
+button{
+    padding: 25px 25px;
+    font-family: sans-serif;
+}
+
+input[type=range]{
+    display: block;
+}
+
+#sliders{
+    position: relative;
+    left: 570px;
+    bottom: 60px;
+}
+
+
+#inputs {
+    display: table-cell;
+    vertical-align: middle;
+    position: relative;
+    bottom: 50px;
+}

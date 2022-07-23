@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pol">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body id="body">
+    <canvas id="myCanvas" width="700" height="700" style="border:1px solid #000000;"></canvas>
+    <script src="code.js"></script>
+    <div id="buttons">
+        <button onclick="MainLoop()">Next frame</button>
+        <button onclick="FillArray(true)">Randomize</button>
+        <button onclick="FillArray()">Start from blank</button>
+        <button onclick="StartSim()">Play</button>
+        <button onclick="StopSim()">Stop</button>
+    </div>
+    <div id="sliders">
+        <input type="range" id="R" min="0" max="255" value = 255></input>
+        <input type="range" id="G" min="0" max="255" value = 0></input>
+        <input type="range" id="B" min="0" max="255" value = 0></input>
+    </div>
+    <div id="inputs">
+        <label for="len"> Size: </label>
+        <input id="len" size="1"></input><br>
+        <button style="padding:10px 10px; position: relative; top: 10px; left: 20px;" onclick="SetSize()"> Go! </button>
+    </div>
+</body>
+</html>
