@@ -1,10 +1,18 @@
 button{
     padding: 25px 25px;
     font-family: sans-serif;
+    background-color:beige;
+    border-radius: 7px;
+}
+
+body{
+    overflow-x: hidden;
+    background-color: #efefef;
 }
 
 input[type=range]{
     display: block;
+    border-radius: 7px;
 }
 
 #sliders{
@@ -19,4 +27,11 @@ input[type=range]{
     vertical-align: middle;
     position: relative;
     bottom: 50px;
+}
+
+#info{
+    position: absolute;
+    font-family: sans-serif;
+    left: 750px;
+    top: 0%;
 }
