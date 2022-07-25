@@ -52,6 +52,18 @@ input[type=file]{
     top: 130px;
 }
 
+input[type=checkbox]{
+    position: absolute;
+    left: 750px;
+    top: 100px;
+}
+
+label[name="addOneLabel"]{
+    position: absolute;
+    left: 780px;
+    top: 100px;
+}
+
 #imgCanvas{
     position: absolute;
     left: 750px;
