@@ -37,43 +37,47 @@ function Display(colorMode = "rgb"){
 
 }
 
-function Avg(i, j, index){
+function Avg(i, j, index, add = document.getElementById("addOne").checked){
+    if(add == true)
+        add = 1;
+    else
+        add = 0;
     if(i == 0 && j == 0){
         //return 0;
-        return (arr[1][0][index] + arr[1][1][index] + arr[0][1][index]) / 3;
+        return (arr[1][0][index] + arr[1][1][index] + arr[0][1][index]) / 3 + add;
     }
     if(i == amount - 1 && j == 0){
         //return 0;
-        return (arr[amount - 2][0][index] + arr[amount - 2][1][index] + arr[amount - 1][1][index]) / 3;
+        return (arr[amount - 2][0][index] + arr[amount - 2][1][index] + arr[amount - 1][1][index]) / 3 + add;
     }
     if(i == 0 && j == amount - 1){
         //return 0;
-        return (arr[0][amount - 2][index] + arr[1][amount - 2][index] + arr[1][amount - 1][index]) / 3;
+        return (arr[0][amount - 2][index] + arr[1][amount - 2][index] + arr[1][amount - 1][index]) / 3 + add;
     }
     if(i == amount - 1 && j == amount - 1){
         //return 0;
-        return (arr[amount - 1][amount - 2][index] + arr[amount - 2][amount - 1][index] + arr[amount - 2][amount - 2][index]) / 3;
+        return (arr[amount - 1][amount - 2][index] + arr[amount - 2][amount - 1][index] + arr[amount - 2][amount - 2][index]) / 3 + add;
     }
 
     if(i == 0){
         //return 0;
-        return (arr[i+1][j][index] + arr[i][j+1][index] + arr[i][j-1][index] + arr[i+1][j+1][index] + arr[i+1][j-1][index]) / 5;
+        return (arr[i+1][j][index] + arr[i][j+1][index] + arr[i][j-1][index] + arr[i+1][j+1][index] + arr[i+1][j-1][index]) / 5 + add;
     }
     if(i == amount - 1){
         //return 0;
-        return (arr[i-1][j][index] + arr[i][j+1][index] + arr[i][j-1][index] + arr[i-1][j+1][index] + arr[i-1][j-1][index]) / 5;
+        return (arr[i-1][j][index] + arr[i][j+1][index] + arr[i][j-1][index] + arr[i-1][j+1][index] + arr[i-1][j-1][index]) / 5 + add;
     }
     if(j == 0){
         //return 0;
-        return (arr[i+1][j][index] + arr[i-1][j][index] + arr[i-1][j+1][index] + arr[i+1][j+1][index] + arr[i][j+1][index]) / 5;
+        return (arr[i+1][j][index] + arr[i-1][j][index] + arr[i-1][j+1][index] + arr[i+1][j+1][index] + arr[i][j+1][index]) / 5 + add;
     }
     if(j == amount - 1){
         //return 0;
-        return (arr[i+1][j][index] + arr[i-1][j][index] + arr[i-1][j-1][index] + arr[i+1][j-1][index] + arr[i][j-1][index]) / 5;
+        return (arr[i+1][j][index] + arr[i-1][j][index] + arr[i-1][j-1][index] + arr[i+1][j-1][index] + arr[i][j-1][index]) / 5 + add;
     }
     
     if(i > 0 && j > 0 && i < amount - 1 && j < amount - 1)
-        return (arr[i+1][j][index] + arr[i][j+1][index] + arr[i-1][j][index] + arr[i][j-1][index] + arr[i+1][j+1][index] + arr[i-1][j-1][index] + arr[i+1][j-1][index] + arr[i-1][j+1][index]) / 8;
+        return (arr[i+1][j][index] + arr[i][j+1][index] + arr[i-1][j][index] + arr[i][j-1][index] + arr[i+1][j+1][index] + arr[i-1][j-1][index] + arr[i+1][j-1][index] + arr[i-1][j+1][index]) / 8 + add;
 }
 
 function MakeNewarr(){
