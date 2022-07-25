@@ -32,7 +32,6 @@
         <button style="padding:10px 10px; position: relative; top: 10px; left: 20px;" onclick="SetSize()"> Go! </button>
     </div>
     <div id="imageInputDiv">
-        <p> This no work srry</p>
         <input type="file" id="imageInput" accept="image/jpeg, image/png, image/jpg"><br>
         <canvas id="imgCanvas" width="200" height="200" style="border:1px solid #000000;"></canvas>
     </div>
@@ -41,6 +40,7 @@
             <option value="hue">Hue</option>
             <option value="rgb">RGB</option>
         </select>
-    </div>
+        <input type="checkbox" id="addOne" checked></input>
+        <label for="addOne" name="addOneLabel">Add 1 to average</label>
 </body>
 </html>
