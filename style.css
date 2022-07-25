@@ -1,12 +1,13 @@
 button{
     padding: 25px 25px;
     font-family: sans-serif;
-    background-color:beige;
+    background-color:papayawhip;
     border-radius: 7px;
 }
 
 body{
     overflow-x: hidden;
+    overflow-y: hidden;
     background-color: #efefef;
 }
 
@@ -37,4 +38,22 @@ label{
     font-family: sans-serif;
     left: 750px;
     top: 0%;
+}
+
+select{
+    position: absolute;
+    left: 750px;
+    top: 70px;
+}
+
+input[type=file]{
+    position: absolute;
+    left: 750px;
+    top: 130px;
+}
+
+#imgCanvas{
+    position: absolute;
+    left: 750px;
+    top: 150px;
 }
