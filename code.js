@@ -8,7 +8,7 @@ var display;
 var mainloop;
 var playButton;
 var stopButton;
-var imgCanvas, imgContext, uploadedFile;
+var imgCanvas, imgContext, uploadedFile, lightnessSlider, delay;
 
 arr = [];
 copyarr = [];
@@ -23,10 +23,16 @@ function Display(colorMode = "rgb"){
     for(var i = 0; i < amount; i++){
         for(var j = 0; j < amount; j++){
             ctx.beginPath();
-            if(colorMode != "hue")
+            if(colorMode == "rgb")
                 ctx.fillStyle = "rgb(" + arr[i][j][0] + "," + arr[i][j][1] + "," + arr[i][j][2] + ")";
-            else
-                ctx.fillStyle = "hsl(" + arr[i][j][3] + ",100%, 50%)";
+            else if(colorMode == "hue")
+                ctx.fillStyle = "hsl(" + arr[i][j][3] + ",100%," + lightnessSlider.value + "%)";
+            else if(colorMode == "hs"){
+                ctx.fillStyle = "hsl(" + arr[i][j][3] + "," + String(arr[i][j][4]) + "%," + lightnessSlider.value + "%)";
+            }
+            else if(colorMode == "hsv"){
+                ctx.fillStyle = "hsl(" + arr[i][j][3] + "," + String(arr[i][j][4]) + "%" + "," + String(arr[i][j][5]) + "%)";
+            }
             //ctx.strokeStyle = 'black';
             ctx.fillRect(i*size, j*size, size, size);
             //ctx.rect(i*size - size, j*size - size, size, size);
@@ -88,6 +94,8 @@ function MakeNewarr(){
             copyarr[i][j][1] = Avg(i,j,1);
             copyarr[i][j][2] = Avg(i,j,2);
             copyarr[i][j][3] = Avg(i,j,3);
+            copyarr[i][j][4] = Avg(i,j,4);
+            copyarr[i][j][5] = Avg(i,j,5);
         }
     }
 
@@ -100,6 +108,8 @@ function SetCopyToArr(){
             arr[i][j][1] = copyarr[i][j][1];
             arr[i][j][2] = copyarr[i][j][2];
             arr[i][j][3] = copyarr[i][j][3];
+            arr[i][j][4] = copyarr[i][j][4];
+            arr[i][j][5] = copyarr[i][j][5];
         }
     }
 }
@@ -139,11 +149,9 @@ function ChangeCellOnClick(event){
                     arr[i+x][j+y][0] = r
                     arr[i+x][j+y][1] = g
                     arr[i+x][j+y][2] = b
-                    hueval = CalculateHueVal(r,g,b);
-                    if(!isNaN(hueval))
-                        arr[i+x][j+y][3] = hueval;
-                    else
-                    arr[i+x][j+y][3] = 360;
+                    arr[i+x][j+y][3] = CalculateHueVal(r,g,b);
+                    arr[i+x][j+y][4] = CalculateSaturationVal(r,g,b);
+                    arr[i+x][j+y][5] = CalculateLightnessVal(r,g,b);
             }
         }
     }
@@ -157,9 +165,9 @@ function FillArray(random = false){
     for(let i = 0; i < amount; i++){
         for(let j = 0; j < amount; j++){
                 if(random)
-                    var cell = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 361)];
+                    var cell = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 361), Math.floor(Math.random() * 101), Math.floor(Math.random() * 51)];
                 else
-                    var cell = [255,255,255,360];
+                    var cell = [255,255,255,360,100,50];
                 arr[i][j] = cell;
                 copyarr[i][j] = cell;
         }
@@ -183,13 +191,15 @@ function SetMouseUp(){
 function StartSim(){
     playButton.style.backgroundColor = "#00FF00";
     stopButton.style.backgroundColor = "beige";
-    mainloop = setInterval(MainLoop,50);
+    mainloop = setInterval(MainLoop,delay);
+    //setInterval(display);
 }
 
 function StopSim(){
     playButton.style.backgroundColor = "beige";
     stopButton.style.backgroundColor = "#00FF00";
     clearInterval(mainloop);
+    //clearInterval(display);
 }
 
 function SetSize(){
@@ -234,7 +244,10 @@ function HandleFile(file){
                 imgCanvas.height = ev.target.height;
                 imgCanvas.width = ev.target.width;
                 imgContext.drawImage(ev.target,0,0);
-                imgData = imgContext.getImageData(0, 0, ev.target.height, ev.target.height).data;
+                if(ev.target.height < ev.target.width)
+                    imgData = imgContext.getImageData(0, 0, ev.target.height, ev.target.height).data;
+                else
+                    imgData = imgContext.getImageData(0, 0, ev.target.width, ev.target.width).data;
                 FillArrayWithImageData(imgData, ev.target.height)
             }
 
@@ -246,98 +259,142 @@ function HandleFile(file){
 }
 
 function FillArrayWithImageData(imgData, height){
-    for(var x = 0; x < height * height * 4; x += 4){ //imgData.length/4
-        console.log(Math.floor(x / amount), x % amount);
 
-        arr[x / 4 % amount][Math.floor(x / 4 / amount)][0] = imgData[x];
-        arr[x / 4 % amount][Math.floor(x / 4 / amount)][1] = imgData[x+1];
-        arr[x / 4 % amount][Math.floor(x / 4 / amount)][2] = imgData[x+2];
-        arr[x / 4 % amount][Math.floor(x / 4 / amount)][3] = CalculateHueVal(imgData[x], imgData[x+1], imgData[x+2]);
+    var index = 0, counter;
+
+    var ratio = amount / Math.sqrt(imgData.length / 4);
+    //console.log(ratio, imgData.length);
+    counter = ratio;
+
+    for(let i = 0; i < amount; i += ratio){
+        for(let j = 0; j < amount; j += ratio){
+            DrawPixel(Math.floor(i), Math.floor(j), ratio, imgData[index*4], imgData[index*4 + 1], imgData[index*4 + 2]);
+            index++;
+        }
     }
+
+    //idk ą
 
     // for(let i = 0; i < amount; i++){
     //     for(let j = 0; j < amount; j++){
     //         CalculateHue(i,j);
     //     }
     // }
+
     Display(document.getElementById("colorModeSelect").value);
 }
 
+function DrawPixel(i,j,ratio,r,g,b){
+    for(let x = i; x < i + ratio; x++){
+        for(let y = j; y < j + ratio; y++){
+            arr[y][x] = [r, g, b, CalculateHueVal(r,g,b), CalculateSaturationVal(r,g,b), CalculateLightnessVal(r,g,b)];
+        }
+    }
+}
+
 function CalculateHueVal(r,g,b){
-    var R, G, B, min, max, hue;
+    var R, G, B, min, max;
+    var hue = 0;
+    var errorVal = 240;
     R = r / 255;
     G = g / 255;
     B = b / 255;
-    min = Math.min(Math.min(R,G), Math.min(G,B), Math.min(R,B));
-    max = Math.max(Math.max(R,G), Math.max(G,B), Math.max(R,B));
+    min = Math.min(R,G,B);
+    max = Math.max(R,G,B);
     if(max == R){
-        hue = (G-B)/(max-min);
-        hue *= 60;
-        if(hue < 0)
-            hue += 360;
-        return hue;   
+            hue = 60 * ((G-B)/(max-min) % 6);
+            if(isNaN(hue))
+                return errorVal;
+            return hue;
     }
     else if(max == G){
-        hue = 2 + (B-R)/(max-min);
-        hue *= 60;
-        if(hue < 0)
-            hue += 360;
-        return hue;   
+            hue = 60 * (2 + (B-R)/(max-min));
+            if(isNaN(hue))
+                return errorVal;
+            return hue;   
     }
     else if(max == B){
-        hue = 4 + (R-G)/(max-min);
-        hue *= 60;
-        if(hue < 0)
-            hue += 360;
-        return hue;   
+            hue = 60 * (4 + (R-G)/(max-min));
+            if(isNaN(hue))
+                return errorVal;
+            return hue;
     }
-    else
-        return 360;
 }
 
-function CalculateHue(i,j){
-    var R, G, B, min, max, hue;
-    R = arr[i][j][0] / 255;
-    G = arr[i][j][1] / 255;
-    B = arr[i][j][2] / 255;
-    min = Math.min(Math.min(R,G), Math.min(G,B), Math.min(R,B));
-    max = Math.max(Math.max(R,G), Math.max(G,B), Math.max(R,B));
-    if(max == R){
-        hue = (G-B)/(max-min);
-        hue *= 60;
-        if(hue < 0)
-            hue += 360;
-        arr[i][j][3] = hue;   
-    }
-    else if(max == G){
-        hue = 2 + (B-R)/(max-min);
-        hue *= 60;
-        if(hue < 0)
-            hue += 360;
-        arr[i][j][3] = hue;   
-    }
-    else if(max == B){
-        hue = 4 + (R-G)/(max-min);
-        hue *= 60;
-        if(hue < 0)
-            hue += 360;
-        arr[i][j][3] = hue;   
-    }
+function CalculateSaturationVal(r,g,b){
+    var sat;
+    R = r / 255;
+    G = g / 255;
+    B = b / 255;
+    max = Math.max(R,G,B);
+    min = Math.min(R,G,B);
+    if(max == 0)
+        sat = 0;
+    else
+        sat = ((max - min) / max) * 100;
+    return sat;
+}
+
+function CalculateLightnessVal(r,g,b){
+    R = r / 255;
+    G = g / 255;
+    B = b / 255;
+    return Math.max(R,G,B) * lightnessSlider.value;
+}
+
+// function CalculateHue(i,j){
+//     var R, G, B, min, max, hue;
+//     R = arr[i][j][0] / 255;
+//     G = arr[i][j][1] / 255;
+//     B = arr[i][j][2] / 255;
+//     min = Math.min(Math.min(R,G), Math.min(G,B), Math.min(R,B));
+//     max = Math.max(Math.max(R,G), Math.max(G,B), Math.max(R,B));
+//     if(max == R){
+//         hue = (G-B)/(max-min);
+//         hue *= 60;
+//         if(hue < 0)
+//             hue += 360;
+//         arr[i][j][3] = hue;   
+//     }
+//     else if(max == G){
+//         hue = 2 + (B-R)/(max-min);
+//         hue *= 60;
+//         if(hue < 0)
+//             hue += 360;
+//         arr[i][j][3] = hue;   
+//     }
+//     else if(max == B){
+//         hue = 4 + (R-G)/(max-min);
+//         hue *= 60;
+//         if(hue < 0)
+//             hue += 360;
+//         arr[i][j][3] = hue;   
+//     }
+// }
+
+function UpdateDelay(){
+    delay = document.getElementById("delaySlider").value;
 }
 
 function ChangeColorMode(){
- 
     colorMode = document.getElementById("colorModeSelect").value;
     if(colorMode == "rgb"){
         clearInterval(display);
-        display = setInterval(Display("rgb"),10);
+        display = setInterval(Display("rgb"),delay);
     }
     else if(colorMode == "hue"){
         clearInterval(display);
-        display = setInterval(Display("hue"),10);
+        display = setInterval(Display("hue"),delay);
+    }
+    else if(colorMode == "hs"){
+        clearInterval(display);
+        display = setInterval(Display("hs"), delay);
+    }
+    else if(colorMode == "hsv"){
+        clearInterval(display);
+        display = setInterval(Display("hsv"),delay);
     }
 }
-
 
 //console.log(arr);
 // Display();
@@ -346,8 +403,11 @@ function ChangeColorMode(){
 // //Display();
 // //MakeNewarr();
 window.onload = function() {
+    lightnessSlider = document.getElementById("lightnessSlider");
+    delay = document.getElementById("delaySlider").value;
+
     FillArray(true);
-    document.getElementById("len").value = 50;
+    document.getElementById("len").value = 100;
     document.getElementById("brushSize").value = 5;
 
     playButton = document.getElementById("play");
@@ -359,22 +419,25 @@ window.onload = function() {
 
     //display = setInterval(Display(document.getElementById("colorModeSelect").value));
     setInterval(ChangeColorMode());
+    setInterval(UpdateDelay);
 
     for(let i = 0; i < amount; i++){
         for(let j = 0; j < amount; j++){
-            CalculateHue(i,j);
+            arr[i][j][3] = CalculateHueVal(arr[i][j][0], arr[i][j][1],arr[i][j][2]);
+            arr[i][j][4] = CalculateSaturationVal(arr[i][j][0], arr[i][j][1],arr[i][j][2]);
+            arr[i][j][5] = CalculateLightnessVal(arr[i][j][0], arr[i][j][1],arr[i][j][2]);
+            //console.log(arr[i][j][4])
         }
     }
     SetSize();
     initImageLoader();
 };
 
-
-
 //Display(document.getElementById("colorInput").value);
 document.addEventListener("mousedown",SetMouseDown);
 document.addEventListener("mouseup",SetMouseUp);
+document.addEventListener("touchstart",SetMouseDown);
+document.addEventListener("touchend",SetMouseUp);
 document.getElementById("body").addEventListener("mousemove",ChangeCellOnClick);
 
 //setInterval(MainLoop);
-
