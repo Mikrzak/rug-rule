@@ -11,8 +11,11 @@
     <canvas id="myCanvas" width="700" height="700" style="border:1px solid #000000;"></canvas>
     <script src="code.js"></script>
     <p id="info">
-        Every cell is colored by the average color of its 8 neighbours, implementation of a cellular automaton that I've seen in this video by Rudy Rucker: https://www.youtube.com/watch?v=lyZUzakG3bE
+        Every cell is colored by the average color of its 8 neighbours, implementation of a cellular automaton that I've seen
+        <a href="https://www.youtube.com/watch?v=lyZUzakG3bE">in this video by Rudy Rucker</a><br>
+        <a href="https://www.youtube.com/watch?v=R8-q6-s8s78">Another nice video</a>
     </p>
+    
     <div id="buttons">
         <button onclick="MainLoop()">Next frame</button>
         <button onclick="FillArray(true)">Randomize</button>
@@ -33,14 +36,26 @@
     </div>
     <div id="imageInputDiv">
         <input type="file" id="imageInput" accept="image/jpeg, image/png, image/jpg"><br>
-        <canvas id="imgCanvas" width="200" height="200" style="border:1px solid #000000;"></canvas>
+        <canvas id="imgCanvas" width="200" height="200" style="border:1px solid #000000;" hidden></canvas>
     </div>
     <div id="colorModeDropdown">
         <select onchange="ChangeColorMode()" id="colorModeSelect">
+            <option value="hs">Hue + saturation</option>
             <option value="hue">Hue</option>
-            <option value="rgb">RGB</option>
+            <option value="hsv">HSV</option>
+            <option value="rgb">RGB</option>   
         </select>
         <input type="checkbox" id="addOne" checked></input>
         <label for="addOne" name="addOneLabel">Add 1 to average</label>
+
+        <input type="range" id="lightnessSlider" min="0" max="100" value="50" step="1"></input>
+        <label for="addOne" id="lightnessLabel">Lightness</label>
+
+        <input type="range" id="delaySlider" min="0" max="1000" value="0" step="10"></input>
+        <label for="delaySlider"id="delayLabel">Delay</label>
+    </div>
+    <p id="warning">
+        EPILEPSY WARNING
+    </p>
 </body>
 </html>
