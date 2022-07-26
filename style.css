@@ -69,3 +69,37 @@ label[name="addOneLabel"]{
     left: 750px;
     top: 150px;
 }
+
+#warning{
+    font-family: sans-serif;
+    position: absolute;
+    left: 750px;
+    top: 280px;
+    font-size: 80px;
+}
+
+#lightnessSlider{
+    position: absolute;
+    left: 900px;
+    top: 70px;
+}
+
+#lightnessLabel{
+    font-family: sans-serif;
+    position: absolute;
+    left: 1040px;
+    top: 70px;
+}
+
+#delaySlider{
+    position: absolute;
+    left: 1120px;
+    top: 70px;
+}
+
+#delayLabel{
+    font-family: sans-serif;
+    position: absolute;
+    left: 1260px;
+    top: 70px;
+}
